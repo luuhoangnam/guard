@@ -50,7 +50,7 @@ class Guard
         if (empty( $requirements )) {
             return null;
         }
-        
+
         $roles = $requirements['roles'] ?: [ ];
         $permissions = $requirements['permissions'] ?: [ ];
 
@@ -70,15 +70,15 @@ class Guard
     }
 
     /**
-     * @param Visitor $user
+     * @param Visitor $visitor
      * @param array   $roles
      *
      * @throws UnauthorizedException
      */
-    private function checkVisitorHasRoles(Visitor $user, array $roles)
+    private function checkVisitorHasRoles(Visitor $visitor, array $roles)
     {
         foreach ($roles as $role) {
-            if ( ! $user->hasRole($role)) {
+            if ( ! $visitor->hasRole($role)) {
                 throw new UnauthorizedException;
             }
         }
