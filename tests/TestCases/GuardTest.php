@@ -50,7 +50,10 @@ class GuardTest extends \PHPUnit_Framework_TestCase
     {
         // prepare
         $config = [
-            'guest' => true,
+            'guest'   => false,
+            'hasRole' => [
+                'Foo' => false,
+            ],
         ];
 
         $auth = $this->mockAuth($config);
@@ -61,7 +64,7 @@ class GuardTest extends \PHPUnit_Framework_TestCase
         $guard = new Guard($auth, $log);
 
         $requirements = [
-            'roles'       => [ 'Foo' ],
+            'roles'       => [ 'Foo', 'Bar' ],
             'permissions' => [ ],
         ];
 
