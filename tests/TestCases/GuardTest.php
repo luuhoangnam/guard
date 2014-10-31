@@ -49,10 +49,11 @@ class GuardTest extends \PHPUnit_Framework_TestCase
     {
         // prepare
         $visitor = Mockery::mock('\Nam\Guard\Visitor');
-        $visitor->shouldReceive('hasRole')->once()->andReturn(false);
+        $visitor->shouldReceive('hasRole')->once()->with('Foo')->andReturn(false);
 
         $auth = Mockery::mock('Illuminate\Auth\AuthManager');
-        $auth->shouldReceive('guest')->once()->andReturn(true);
+        $auth->shouldReceive('guest')->once()->andReturn(false);
+        $auth->shouldReceive('user')->once()->andReturn($visitor);
 
         $log = Mockery::mock('Illuminate\Log\Writer');
 
