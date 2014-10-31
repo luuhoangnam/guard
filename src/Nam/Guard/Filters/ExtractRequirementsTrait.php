@@ -17,11 +17,12 @@ trait ExtractRequirementsTrait
 {
     /**
      * @param string $parameters
+     * @param string $filter
      * @param array  $allowedSeparators
      *
      * @return array
      */
-    protected function extractRequirements($parameters, array $allowedSeparators = [ '+' ])
+    protected function extractRequirements($parameters, $filter, array $allowedSeparators = [ '+' ])
     {
         if (empty( $allowedSeparators )) {
             $message = "Allowed separators must be an array.";
@@ -40,7 +41,7 @@ trait ExtractRequirementsTrait
         }
 
         foreach ($permissions as $permission) {
-            $requirements['permissions'][] = trim($permission);
+            $requirements[$filter][] = trim($permission);
         }
 
         return $requirements;

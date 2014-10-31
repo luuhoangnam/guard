@@ -63,7 +63,7 @@ class Permissions
             return null; // Allow
         }
 
-        $requirements = $this->extractRequirements($parameters);
+        $requirements = $this->extractRequirements($parameters, 'permissions');
 
         // Censor all access
         return $this->guard->censor($requirements);
