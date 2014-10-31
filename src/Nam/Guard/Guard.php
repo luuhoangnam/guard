@@ -46,6 +46,7 @@ class Guard
      * @return mixed
      */
     protected function censor(array $requirements = [ ])
+    public function censor(array $requirements = [ ])
     {
         // Get current user
         $visitor = $this->auth->user();
