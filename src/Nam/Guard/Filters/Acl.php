@@ -73,7 +73,7 @@ class Acl extends Guard
      */
     protected function extractRequirements(Route $route)
     {
-        $docComment = $this->getDocComment($route->getAction()['controller']);
+        $docComment = $this->getDocComment($route->getActionName());
 
         $requirements = [
             'permissions' => [ ],
