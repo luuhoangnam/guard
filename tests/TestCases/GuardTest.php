@@ -17,6 +17,11 @@ use Nam\Guard\Guard;
  */
 class GuardTest extends \PHPUnit_Framework_TestCase
 {
+    protected function tearDown()
+    {
+        Mockery::close();
+    }
+
     /**
      * @expectedException \Nam\Guard\Exceptions\UnauthorizedException
      */
