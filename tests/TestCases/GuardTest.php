@@ -109,6 +109,105 @@ class GuardTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @expectedException \Nam\Guard\Exceptions\UnauthorizedException
+     */
+    public function test_it_should_throw_exception_when_visitor_is_user_who_did_not_passed_first_required_permissions()
+    {
+        // prepare
+        $config = [
+            'guest' => false,
+            'can'   => [
+                'posts.store' => false,
+            ],
+        ];
+
+        $auth = $this->mockAuth($config);
+
+        $log = $this->mockLog();
+
+        /** @noinspection PhpParamsInspection */
+        $guard = new Guard($auth, $log);
+
+        $requirements = [
+            'roles'       => [ ],
+            'permissions' => [ 'posts.store', 'posts.update' ],
+        ];
+
+        // act
+        $guard->censor($requirements);
+
+        // assert
+    }
+
+    /**
+     * @expectedException \Nam\Guard\Exceptions\UnauthorizedException
+     */
+    public function test_it_should_throw_exception_when_visitor_is_user_who_did_not_passed_second_required_permissions()
+    {
+        // prepare
+        $config = [
+            'guest' => false,
+            'can'   => [
+                'posts.store'  => true,
+                'posts.update' => false,
+            ],
+        ];
+
+        $auth = $this->mockAuth($config);
+
+        $log = $this->mockLog();
+
+        /** @noinspection PhpParamsInspection */
+        $guard = new Guard($auth, $log);
+
+        $requirements = [
+            'roles'       => [ ],
+            'permissions' => [ 'posts.store', 'posts.update' ],
+        ];
+
+        // act
+        $guard->censor($requirements);
+
+        // assert
+    }
+
+    /**
+     * @expectedException \Nam\Guard\Exceptions\UnauthorizedException
+     */
+    public function test_it_should_throw_exception_when_visitor_is_user_who_did_not_passed_requirements()
+    {
+        // prepare
+        $config = [
+            'guest'   => false,
+            'hasRole' => [
+                'Foo' => true,
+                'Bar' => true,
+            ],
+            'can'     => [
+                'posts.store'  => true,
+                'posts.update' => false,
+            ],
+        ];
+
+        $auth = $this->mockAuth($config);
+
+        $log = $this->mockLog();
+
+        /** @noinspection PhpParamsInspection */
+        $guard = new Guard($auth, $log);
+
+        $requirements = [
+            'roles'       => [ ],
+            'permissions' => [ 'posts.store', 'posts.update' ],
+        ];
+
+        // act
+        $guard->censor($requirements);
+
+        // assert
+    }
+
+    /**
      * @param $config
      *
      * @return MockInterface
@@ -140,6 +239,10 @@ class GuardTest extends \PHPUnit_Framework_TestCase
             $this->hasRole($visitor, $config['hasRole']);
         }
 
+        if (isset( $config['can'] )) {
+            $this->can($visitor, $config['can']);
+        }
+
         return $visitor;
     }
 
@@ -151,6 +254,17 @@ class GuardTest extends \PHPUnit_Framework_TestCase
     {
         foreach ($roles as $role => $return) {
             $visitor->shouldReceive('hasRole')->once()->with($role)->andReturn($return);
+        }
+    }
+
+    /**
+     * @param MockInterface $visitor
+     * @param array         $permissions
+     */
+    protected function can(MockInterface $visitor, array $permissions)
+    {
+        foreach ($permissions as $permission => $return) {
+            $visitor->shouldReceive('can')->once()->with($permission)->andReturn($return);
         }
     }
 
