@@ -45,14 +45,14 @@ class Guard
      * @throws UnauthorizedException
      * @return mixed
      */
-    protected function censor(array $requirements = [ ])
     public function censor(array $requirements = [ ])
     {
-        // Get current user
-        $visitor = $this->auth->user();
-
-        $roles = $requirements['roles'];
-        $permissions = $requirements['permissions'];
+        if (empty( $requirements )) {
+            return null;
+        }
+        
+        $roles = $requirements['roles'] ?: [ ];
+        $permissions = $requirements['permissions'] ?: [ ];
 
         // Allow if have no restrictions
         if (empty ( $roles ) && empty( $permissions )) {
@@ -62,7 +62,9 @@ class Guard
         // Otherwise deny guest & all unauthorized access
         $this->denyGuest($roles, $permissions);
 
-        // Check
+        // Get current user & check
+        /** @var Visitor $visitor */
+        $visitor = $this->auth->user();
         $this->checkVisitorHasRoles($visitor, $roles);
         $this->checkVisitorHasPermissions($visitor, $permissions);
     }
