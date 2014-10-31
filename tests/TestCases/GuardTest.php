@@ -202,7 +202,7 @@ class GuardTest extends \PHPUnit_Framework_TestCase
         $guard = new Guard($auth, $log);
 
         $requirements = [
-            'roles'       => [ ],
+            'roles'       => [ 'Foo', 'Bar' ],
             'permissions' => [ 'posts.store', 'posts.update' ],
         ];
 
