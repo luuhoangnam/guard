@@ -23,16 +23,19 @@ class GuardTest extends \PHPUnit_Framework_TestCase
     public function test_it_should_throw_exception_when_requirements_existed_and_visitor_is_guest()
     {
         // prepare
-        $auth = Mockery::mock('Illuminate\Auth\AuthManager');
-        $auth->shouldReceive('guest')->once()->andReturn(true);
+        $config = [
+            'guest' => true,
+        ];
 
-        $log = Mockery::mock('Illuminate\Log\Writer');
+        $auth = $this->mockAuth($config);
+
+        $log = $this->mockLog();
 
         /** @noinspection PhpParamsInspection */
         $guard = new Guard($auth, $log);
 
         $requirements = [
-            'roles'       => [ 'Foo' ],
+            'roles'       => [ 'Foo', 'Bar' ],
             'permissions' => [ ],
         ];
 
@@ -40,7 +43,6 @@ class GuardTest extends \PHPUnit_Framework_TestCase
         $guard->censor($requirements);
 
         // assert
-
     }
 
     /**
