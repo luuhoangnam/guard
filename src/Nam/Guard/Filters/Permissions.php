@@ -20,20 +20,22 @@ use Nam\Guard\Guard;
  */
 class Permissions
 {
+    use ExtractRequirementsTrait;
+
     /**
      * @var Guard
      */
-    private $guard;
+    protected $guard;
 
     /**
      * @var Application
      */
-    private $app;
+    protected $app;
 
     /**
      * @var Writer|Logger
      */
-    private $log;
+    protected $log;
 
     /**
      * @param Application $app
@@ -47,31 +49,24 @@ class Permissions
     }
 
     /**
-     * @param Route      $route
-     * @param Request    $request
-     * @param mixed|null $value
+     * @param Route   $route
+     * @param Request $request
+     * @param mixed   $parameters
      *
-     * @return mixed|null
+     * @return bool|mixed
      */
-    public function filter(Route $route, Request $request, $value = null)
+    public function filter(Route $route, Request $request, $parameters = null)
     {
-        if (is_null($value)) {
+        if (empty( $parameters )) {
             $this->log->warning("Route [{$route->getName()}] declared \"permissions\" filer but does not declare filter parameters.");
 
             return null; // Allow
         }
 
-        $acl = [
-            'roles'       => [ ],
-            'permissions' => [ ],
-        ];
+        $requirements = $this->extractRequirements($parameters);
 
-        $roles = explode('+', $value);
-
-        foreach ($roles as $role) {
-            $acl['roles'][] = trim($role);
-        }
-
-        return $this->guard($acl, 'roles');
+        // Censor all access
+        return $this->guard->censor($requirements);
     }
+
 }

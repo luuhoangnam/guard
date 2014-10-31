@@ -52,6 +52,7 @@ class GuardServiceProvider extends ServiceProvider
     {
         $router = $this->app->make('router');
         $router->filter('acl', 'Nam\Guard\Filters\Acl');
+        $router->filter('permissions', 'Nam\Guard\Filters\Permissions');
     }
 
 }
