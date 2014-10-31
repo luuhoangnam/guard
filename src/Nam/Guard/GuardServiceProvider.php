@@ -4,6 +4,10 @@ namespace Nam\Guard;
 
 use Illuminate\Support\ServiceProvider;
 
+/**
+ * Class GuardServiceProvider
+ * @package Nam\Guard
+ */
 class GuardServiceProvider extends ServiceProvider
 {
 
@@ -31,7 +35,7 @@ class GuardServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->registerFilters();
     }
 
     /**
@@ -42,6 +46,12 @@ class GuardServiceProvider extends ServiceProvider
     public function provides()
     {
         return [ ];
+    }
+
+    protected function registerFilters()
+    {
+        $router = $this->app->make('router');
+        $router->filter('acl', 'Nam\Guard\Filters\Acl');
     }
 
 }
